@@ -1,0 +1,21 @@
+{
+  "name": "tavern-ws",
+  "version": "1.0.0",
+  "description": "WebSocket gateway server for Tavern",
+  "main": "src/index.js",
+  "scripts": {
+    "compile-protos": "./scripts/compileProtos.sh",
+    "start": "NODE_ENV=development node src/index.js"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "Jakub Stasiak",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "grpc": "^1.24.11",
+    "grpc-tools": "^1.11.2",
+    "redis": "^4.0.0",
+    "socket.io": "^4.4.0"
+  }
+}
