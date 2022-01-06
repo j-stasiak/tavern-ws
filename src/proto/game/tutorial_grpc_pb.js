@@ -1,7 +1,7 @@
 // GENERATED CODE -- DO NOT EDIT!
 
 'use strict';
-var grpc = require('grpc');
+var grpc = require('@grpc/grpc-js');
 var game_tutorial_pb = require('../game/tutorial_pb.js');
 var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
 

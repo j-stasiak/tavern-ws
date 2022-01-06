@@ -5,17 +5,29 @@
   "main": "src/index.js",
   "scripts": {
     "compile-protos": "./scripts/compileProtos.sh",
-    "start": "NODE_ENV=development node src/index.js"
+    "prebuild": "rimraf dist && npm run compile-protos",
+    "build": "tsc --project .",
+    "prestart": "npm run build",
+    "start": "node ./dist/index.js",
+    "start:dev": "nodemon src/index.ts"
   },
   "keywords": [],
-  "type": "module",
   "author": "Jakub Stasiak",
   "license": "ISC",
   "dependencies": {
+    "@grpc/grpc-js": "^1.4.6",
     "dotenv": "^10.0.0",
-    "grpc": "^1.24.11",
     "grpc-tools": "^1.11.2",
     "redis": "^4.0.0",
+    "rimraf": "^3.0.2",
     "socket.io": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "grpc_tools_node_protoc_ts": "^5.3.2",
+    "nodemon": "^2.0.15",
+    "ts-jest": "^27.0.7",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
   }
 }
