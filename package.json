@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "compile-protos": "./scripts/compileProtos.sh",
-    "prebuild": "rimraf dist && npm run compile-protos",
+    "prebuild": "rimraf dist",
     "build": "tsc --project .",
     "prestart": "npm run build",
     "start": "node ./dist/index.js",
