@@ -28,9 +28,9 @@ function deserialize_google_protobuf_Empty(buffer_arg) {
 }
 
 
-var TutorialServiceService = exports.TutorialServiceService = {
+var TutorialService = exports.TutorialService = {
   completeTutorial: {
-    path: '/TutorialService/CompleteTutorial',
+    path: '/Tutorial/CompleteTutorial',
     requestStream: false,
     responseStream: false,
     requestType: game_tutorial_pb.CompleteTutorialRequest,
@@ -42,4 +42,4 @@ var TutorialServiceService = exports.TutorialServiceService = {
   },
 };
 
-exports.TutorialServiceClient = grpc.makeGenericClientConstructor(TutorialServiceService);
+exports.TutorialClient = grpc.makeGenericClientConstructor(TutorialService);
