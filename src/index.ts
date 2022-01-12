@@ -29,7 +29,7 @@ client.executeCode(code, (err, res) => {
   }
 });*/
 let corsOrigin;
-
+console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === "development") {
   corsOrigin = "*";
 } else {
@@ -42,5 +42,5 @@ server.on("connection", (socket) => {
   configureChatEvents(server, socket, redis);
 });
 
-server.listen(PORT, { cors: { origin: corsOrigin } });
+server.listen(PORT, { cors: { origin: "*" } });
 console.log(`Listening on port *:${PORT}`);
