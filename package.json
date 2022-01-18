@@ -15,9 +15,13 @@
   "author": "Jakub Stasiak",
   "license": "ISC",
   "dependencies": {
+    "@colyseus/monitor": "^0.14.22",
+    "@colyseus/ws-transport": "^0.14.21",
     "@grpc/grpc-js": "^1.4.6",
     "colyseus": "^0.14.23",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "express": "^4.17.2",
     "google-protobuf": "^3.19.2",
     "grpc-tools": "^1.11.2",
     "redis": "^4.0.0",
@@ -25,6 +29,7 @@
     "socket.io": "^4.4.0"
   },
   "devDependencies": {
+    "@types/express": "^4.17.13",
     "@types/google-protobuf": "^3.15.5",
     "@types/node": "^16.11.7",
     "grpc_tools_node_protoc_ts": "^5.3.2",
