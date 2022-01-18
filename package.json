@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@grpc/grpc-js": "^1.4.6",
+    "colyseus": "^0.14.23",
     "dotenv": "^10.0.0",
     "google-protobuf": "^3.19.2",
     "grpc-tools": "^1.11.2",
