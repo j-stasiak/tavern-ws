@@ -6,6 +6,7 @@ const players: {
 export class PokeWorld extends Room {
   override onCreate(options: any) {
     console.log("ON CREATE");
+    this.registerEvents();
   }
 
   override onJoin(player: Client, options: any) {
