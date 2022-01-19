@@ -1,44 +1,36 @@
 import { Client, Room } from "@colyseus/core";
+import { PokeWorldState } from "./PokeWorldState";
 //TODO: Change to redis
-const players: {
-  [id: string]: { sessionId: string; map: string; x: number; y: number };
-} = {};
-export class PokeWorld extends Room {
+export class PokeWorld extends Room<PokeWorldState> {
   override onCreate(options: any) {
-    console.log("ON CREATE");
+    this.setState(new PokeWorldState());
     this.registerEvents();
   }
 
   override onJoin(player: Client, options: any) {
     console.log("ON JOIN");
-
-    players[player.sessionId] = {
-      sessionId: player.sessionId,
-      map: "town",
-      x: 352,
-      y: 1216,
-    };
+    this.state.createPlayer(player.sessionId);
 
     setTimeout(
-      () => this.send(player, "CURRENT_PLAYERS", { players: players }),
+      () =>
+        this.send(player, "CURRENT_PLAYERS", {
+          players: this.state.listPlayers(),
+        }),
       500
     );
-    this.broadcast(
-      "PLAYER_JOINED",
-      { ...players[player.sessionId] },
-      { except: player }
-    );
+    this.broadcast("PLAYER_JOINED", this.state.getPlayer(player.sessionId), {
+      except: player,
+    });
   }
 
   registerEvents() {
     this.onMessage("PLAYER_MOVED", (player: Client, data: any) => {
-      players[player.sessionId].x = data.x;
-      players[player.sessionId].y = data.y;
+      this.state.movePlayer(player.sessionId, data);
 
       this.broadcast(
         "PLAYER_MOVED",
         {
-          ...players[player.sessionId],
+          ...this.state.getPlayer(player.sessionId),
           position: data.position,
         },
         { except: player }
@@ -46,27 +38,26 @@ export class PokeWorld extends Room {
     });
 
     this.onMessage("PLAYER_MOVEMENT_ENDED", (player: Client, data: any) => {
+      console.log("PLAYER_MOVEMENT_ENDED");
       this.broadcast(
         "PLAYER_MOVEMENT_ENDED",
         {
           sessionId: player.sessionId,
-          map: players[player.sessionId].map,
+          map: this.state.getPlayerMap(player.sessionId),
           position: data.position,
         },
         { except: player }
       );
     });
     this.onMessage("PLAYER_CHANGED_MAP", (player: Client, data: any) => {
-      players[player.sessionId].map = data.map;
-
-      // this.send(player, {event: "CURRENT_PLAYERS", players: players})
+      this.state.setPlayerMap(player.sessionId, data.map);
 
       this.broadcast("PLAYER_CHANGED_MAP", {
         sessionId: player.sessionId,
-        map: players[player.sessionId].map,
+        map: this.state.getPlayerMap(player.sessionId),
         x: 300,
         y: 75,
-        players: players,
+        players: this.state.listPlayers(),
       });
     });
   }
@@ -76,9 +67,8 @@ export class PokeWorld extends Room {
 
     this.broadcast("PLAYER_LEFT", {
       sessionId: player.sessionId,
-      map: players[player.sessionId].map,
+      map: this.state.getPlayerMap(player.sessionId),
     });
-    delete players[player.sessionId];
   }
 
   override onDispose() {

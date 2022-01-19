@@ -25,5 +25,5 @@ gameServer.define("poke_world", PokeWorld);
 
 app.use("/monitor", monitor());
 
-gameServer.listen(PORT);
+gameServer.listen(PORT, "0.0.0.0");
 console.log(`Listening on ws://localhost:${PORT}`);
