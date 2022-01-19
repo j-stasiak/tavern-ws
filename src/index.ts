@@ -18,7 +18,7 @@ const gameServer = new Server({
   transport: new WebSocketTransport({
     server,
   }),
-  presence: new RedisPresence(),
+  presence: new RedisPresence({ host: "cache" }),
 });
 
 gameServer.define("poke_world", PokeWorld);
