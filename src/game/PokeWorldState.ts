@@ -9,10 +9,16 @@ export class Player extends Schema {
   y = 1216;
 
   @type("string")
+  position = "front";
+
+  @type("string")
   map = "town";
 
   @type("string")
   sessionId = "";
+
+  @type("boolean")
+  walking = false;
 }
 
 export class PokeWorldState extends Schema {
@@ -48,12 +54,25 @@ export class PokeWorldState extends Schema {
     if (!player) {
       throw new Error("No player with this sessionId!");
     }
+    player.walking = true;
     if (movement.x) {
       player.x = movement.x;
     }
     if (movement.y) {
       player.y = movement.y;
     }
+    if (movement.position) {
+      player.position = movement.position;
+    }
+  }
+
+  stopPlayer(sessionId: string, movement: any) {
+    const player = this.players.get(sessionId);
+    if (!player) {
+      throw new Error("No player with this sessionId!");
+    }
+    player.walking = false;
+    player.position = movement.position;
   }
 
   getPlayerMap(sessionId: string) {

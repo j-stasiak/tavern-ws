@@ -30,7 +30,7 @@ export class PokeWorld extends Room<PokeWorldState> {
   }
 
   override onLeave(player: Client, consented: any) {
-    this.state.players.
+    // this.state.players.
   }
 
   override onDispose() {
