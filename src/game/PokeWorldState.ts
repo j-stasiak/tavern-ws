@@ -1,6 +1,6 @@
 //TODO: Add legit state for room
 //src: https://github.com/colyseus/unity-demo-mmo/blob/master/Server/src/rooms/schema/RoomState.ts
-import { Schema, type, MapSchema } from "@colyseus/schema";
+import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 export class Player extends Schema {
   @type("number")
   x = 352;
@@ -21,9 +21,29 @@ export class Player extends Schema {
   walking = false;
 }
 
+export class Message extends Schema {
+  formatDate() {
+    // TODO Send utc and change it on frontend to local
+    const date = new Date();
+    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  }
+
+  @type("string")
+  message = "";
+
+  @type("string")
+  nick = "";
+
+  @type("string")
+  date = this.formatDate();
+}
+
 export class PokeWorldState extends Schema {
   @type({ map: Player })
   players = new MapSchema<Player>();
+
+  @type({ array: Message })
+  messages = new ArraySchema<Message>();
 
   listPlayers() {
     const players = [];

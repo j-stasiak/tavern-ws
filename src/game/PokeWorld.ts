@@ -1,9 +1,14 @@
 import { Client, Room } from "@colyseus/core";
-import { PokeWorldState } from "./PokeWorldState";
+import { Message, PokeWorldState } from "./PokeWorldState";
 //TODO: Change to redis
 export class PokeWorld extends Room<PokeWorldState> {
   override onCreate(options: any) {
     this.setState(new PokeWorldState());
+    const message = new Message();
+    message.nick = "BigDickNick";
+    message.message = "Inzynierka mocno";
+    message.date = new Date().toUTCString();
+    this.state.messages.push(message);
     this.registerEvents();
   }
 
@@ -13,6 +18,15 @@ export class PokeWorld extends Room<PokeWorldState> {
   }
 
   registerEvents() {
+    this.onMessage("MESSAGE_SENT", (player: Client, data: any) => {
+      console.log("MESSAGE SENT");
+      const message = new Message();
+      message.nick = data.nick;
+      message.message = data.message;
+      message.date = new Date().toUTCString();
+      this.state.messages.push(message);
+    });
+
     this.onMessage("PLAYER_MOVED", (player: Client, data: any) => {
       this.state.movePlayer(player.sessionId, data);
     });
