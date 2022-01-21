@@ -2,7 +2,7 @@ import { Client, Room } from "@colyseus/core";
 import { IncomingMessage } from "http";
 import { Message, PokeWorldState } from "./PokeWorldState";
 import jwtDecode from "jwt-decode";
-//TODO: Change to redis
+
 export class PokeWorld extends Room<PokeWorldState> {
   override onCreate(options: any) {
     this.setState(new PokeWorldState());
@@ -12,9 +12,10 @@ export class PokeWorld extends Room<PokeWorldState> {
   override onAuth(client: Client, options: any, request?: IncomingMessage) {
     if (!options.token) {
       throw new Error("No JWT provided!");
+    } else {
+      const user = jwtDecode(options.token);
+      return user;
     }
-    const user = jwtDecode(options.token);
-    return user;
   }
 
   override onJoin(player: Client, options: any, user: any) {
@@ -51,5 +52,7 @@ export class PokeWorld extends Room<PokeWorldState> {
 
   override onDispose() {
     console.log("ON DISPOSE");
+    this.state.players.clear();
+    this.state.messages.clear();
   }
 }
