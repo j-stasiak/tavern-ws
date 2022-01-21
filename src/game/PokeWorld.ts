@@ -10,65 +10,27 @@ export class PokeWorld extends Room<PokeWorldState> {
   override onJoin(player: Client, options: any) {
     console.log("ON JOIN");
     this.state.createPlayer(player.sessionId);
-
-    setTimeout(
-      () =>
-        this.send(player, "CURRENT_PLAYERS", {
-          players: this.state.listPlayers(),
-        }),
-      500
-    );
-    this.broadcast("PLAYER_JOINED", this.state.getPlayer(player.sessionId), {
-      except: player,
-    });
   }
 
   registerEvents() {
     this.onMessage("PLAYER_MOVED", (player: Client, data: any) => {
       this.state.movePlayer(player.sessionId, data);
-
-      this.broadcast(
-        "PLAYER_MOVED",
-        {
-          ...this.state.getPlayer(player.sessionId),
-          position: data.position,
-        },
-        { except: player }
-      );
     });
 
     this.onMessage("PLAYER_MOVEMENT_ENDED", (player: Client, data: any) => {
-      console.log("PLAYER_MOVEMENT_ENDED");
-      this.broadcast(
-        "PLAYER_MOVEMENT_ENDED",
-        {
-          sessionId: player.sessionId,
-          map: this.state.getPlayerMap(player.sessionId),
-          position: data.position,
-        },
-        { except: player }
-      );
+      this.state.stopPlayer(player.sessionId, data);
     });
+
     this.onMessage("PLAYER_CHANGED_MAP", (player: Client, data: any) => {
       this.state.setPlayerMap(player.sessionId, data.map);
-
-      this.broadcast("PLAYER_CHANGED_MAP", {
-        sessionId: player.sessionId,
-        map: this.state.getPlayerMap(player.sessionId),
-        x: 300,
-        y: 75,
-        players: this.state.listPlayers(),
-      });
+      const p = this.state.getPlayer(player.sessionId);
+      p.x = 300;
+      p.y = 75;
     });
   }
 
   override onLeave(player: Client, consented: any) {
-    console.log("ON LEAVE");
-
-    this.broadcast("PLAYER_LEFT", {
-      sessionId: player.sessionId,
-      map: this.state.getPlayerMap(player.sessionId),
-    });
+    this.state.players.
   }
 
   override onDispose() {
