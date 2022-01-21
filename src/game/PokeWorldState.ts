@@ -1,5 +1,3 @@
-//TODO: Add legit state for room
-//src: https://github.com/colyseus/unity-demo-mmo/blob/master/Server/src/rooms/schema/RoomState.ts
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 export class Player extends Schema {
   @type("number")
@@ -19,6 +17,9 @@ export class Player extends Schema {
 
   @type("boolean")
   walking = false;
+
+  @type("string")
+  nick = "";
 }
 
 export class Message extends Schema {
@@ -59,9 +60,10 @@ export class PokeWorldState extends Schema {
     }));
   }
 
-  createPlayer(sessionId: string) {
+  createPlayer(sessionId: string, username: string) {
     const player = new Player();
     player.sessionId = sessionId;
+    player.nick = username;
     this.players.set(sessionId, player);
   }
 

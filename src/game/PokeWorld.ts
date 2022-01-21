@@ -1,29 +1,31 @@
 import { Client, Room } from "@colyseus/core";
+import { IncomingMessage } from "http";
 import { Message, PokeWorldState } from "./PokeWorldState";
+import jwtDecode from "jwt-decode";
 //TODO: Change to redis
 export class PokeWorld extends Room<PokeWorldState> {
   override onCreate(options: any) {
     this.setState(new PokeWorldState());
-    const message = new Message();
-    message.nick = "BigDickNick";
-    message.message = "Inzynierka mocno";
-    message.date = new Date().toUTCString();
-    this.state.messages.push(message);
     this.registerEvents();
   }
 
-  override onJoin(player: Client, options: any) {
-    console.log("ON JOIN");
-    this.state.createPlayer(player.sessionId);
+  override onAuth(client: Client, options: any, request?: IncomingMessage) {
+    if (!options.token) {
+      throw new Error("No JWT provided!");
+    }
+    const user = jwtDecode(options.token);
+    return user;
+  }
+
+  override onJoin(player: Client, options: any, user: any) {
+    this.state.createPlayer(player.sessionId, user.username);
   }
 
   registerEvents() {
     this.onMessage("MESSAGE_SENT", (player: Client, data: any) => {
-      console.log("MESSAGE SENT");
       const message = new Message();
       message.nick = data.nick;
       message.message = data.message;
-      message.date = new Date().toUTCString();
       this.state.messages.push(message);
     });
 
@@ -44,7 +46,7 @@ export class PokeWorld extends Room<PokeWorldState> {
   }
 
   override onLeave(player: Client, consented: any) {
-    // this.state.players.
+    this.state.players.delete(player.sessionId);
   }
 
   override onDispose() {

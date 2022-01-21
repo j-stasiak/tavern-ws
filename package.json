@@ -25,6 +25,7 @@
     "express": "^4.17.2",
     "google-protobuf": "^3.19.2",
     "grpc-tools": "^1.11.2",
+    "jwt-decode": "^3.1.2",
     "redis": "^4.0.0",
     "rimraf": "^3.0.2"
   },
