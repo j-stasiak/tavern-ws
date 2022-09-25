@@ -1,4 +1,4 @@
-import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
+import { ArraySchema, MapSchema, Schema, type } from "@colyseus/schema";
 export class Player extends Schema {
   @type("number")
   x = 352;
@@ -24,22 +24,30 @@ export class Player extends Schema {
 
 export class Message extends Schema {
   formatDate() {
-    // TODO Send utc and change it on frontend to local
     const date = new Date();
     return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
   }
 
+  @type("number")
+  likesCount = 0;
+
   @type("string")
   message = "";
+
+  @type("string")
+  userId = "";
 
   @type("string")
   nick = "";
 
   @type("string")
   date = this.formatDate();
+
+  @type("string")
+  id = "";
 }
 
-export class PokeWorldState extends Schema {
+export class WorldState extends Schema {
   @type({ map: Player })
   players = new MapSchema<Player>();
 

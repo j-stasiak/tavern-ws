@@ -1,12 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
+
+import { RedisPresence, Server } from "colyseus";
+import { WebSocketTransport } from "@colyseus/ws-transport";
+import { World } from "./game/World";
+import cors from "cors";
 import express from "express";
 import http from "http";
-import cors from "cors";
-import { Server, RedisPresence } from "colyseus";
-import { WebSocketTransport } from "@colyseus/ws-transport";
 import { monitor } from "@colyseus/monitor";
-import { PokeWorld } from "./game/PokeWorld";
 
 const PORT = Number(process.env.PORT) || 4001;
 const app = express();
@@ -18,10 +19,9 @@ const gameServer = new Server({
   transport: new WebSocketTransport({
     server,
   }),
-  presence: new RedisPresence({ host: "cache" }),
 });
 
-gameServer.define("poke_world", PokeWorld);
+gameServer.define("poke_world", World);
 
 app.use("/monitor", monitor());
 
